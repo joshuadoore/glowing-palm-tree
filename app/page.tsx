@@ -1,14 +1,24 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { square } from "@/lib/utils";
 
 const Home = () => {
+  const searchParams = useSearchParams();
+  let initialValue = searchParams.get("initial") ?? "";
+
+  let totalClicks = 0;
+
   const [count, setCount] = useState(0);
   const [multiCount, setMultiCount] = useState(0);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(initialValue);
+
+  useEffect(() => {
+    initialValue = searchParams.get("initial") ?? "";
+  }, [searchParams]);
 
   const logValue = () => {
     console.log("Value: ", inputValue);
@@ -24,6 +34,7 @@ const Home = () => {
   };
 
   const handleSquareClick = () => {
+    totalClicks++;
     const value = Number(inputValue) || 0;
     setCount(square(value));
   };
@@ -53,6 +64,7 @@ const Home = () => {
         <div>
           <p>square = {count}</p>
           <p>square on square = {multiCount}</p>
+          <p>Clicks: {totalClicks}</p>
         </div>
         <div>
           <Button onClick={handleReset} variant="secondary">
